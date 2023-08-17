@@ -5,7 +5,13 @@ Various experiments and tools for iXML, [Invisible XML](https://invisiblexml.org
 
 Here at the top level you will find tooling, configuration and documentation.
 
-This work builds on a foundation laid by members of the iXML community, especially Norm Tovey-Walsh.
+This work builds on a foundation laid by members of the iXML and XML communities.
+
+## Maturity and maintenance plan
+
+Use at your own risk. Because this constitutes primary development work whose main intent is to provide examples for borrowing, it comes without warranty or explicit maintenance plan.
+
+The idea is to maintain the site in an "as is" state, useful for itself. Feel free to copy its code elsewhere or take inspiration, while crediting your sources as always.
 
 ## Testing iXML
 
@@ -21,24 +27,27 @@ In addition to the utilities provided and documented in this repository, these a
   - [Steven Pemberton’s hands-on tutorial](http://www.cwi.nl/~steven/ixml/tutorial/)
   - Other tutorials and intro treatments including from Norm Tovey-Walsh
 
+## How to Do It
+
+Start by browsing the repository to survey its contents and state.
+
+For guidance on available scripts, see the [`src` directory readme file](src/readme.md).
+
+In the `ixml` directory are several samples of iXML grammars (applications) at various stages of progress. These can also be tested using external utilities such as  [iXML Workbench](https://johnlumley.github.io/jwiXML.xhtml).
+
+https://github.com/invisibleXML/ixml/tree/master/samples also gives some examples from community members.
+
 ## Dependencies
 
 These scripts and libraries rely on `bash`, Maven, XML Calabash, Saxon, and components for Calabash as documented for iXML.
 
-Install [Maven](https://maven.apache.org) to manage software dependencies and run scripts from [`bash`](https://www.gnu.org/software/bash/).
+Install [Maven](https://maven.apache.org) to manage software dependencies; check for or install [`bash`](https://www.gnu.org/software/bash/) to run invocation scripts.
 
 Many thanks to the developers of all layers in this impressive commodity stack!
 
 - [XML Calabash](https://xmlcalabash.com/) and [NineML]()
 - [Saxon](https://saxonica.com/welcome/welcome.xml)
 
-## How to Do It
-
-See the [`src` directory readme file](src/readme.md).
-
-In the `ixml` directory are several samples of iXML grammars (applications) at various stages of progress.
-
-https://github.com/invisibleXML/ixml/tree/master/samples also gives some examples from community members.
 
 ## Project planning
 
@@ -77,9 +86,6 @@ Goals:
 Principal Investigator: Wendell Piez, NIST (US National Institute of Standards and Technology) ITL/CSD (Information Technology Laboratory, Computer Security Division).
 
 Email w e n d e l l (dot) p i e z (at) n i s t (dot) g o v.
-
-
----
 
 ## README (retained from template)
 
