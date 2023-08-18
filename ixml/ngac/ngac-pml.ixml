@@ -35,19 +35,19 @@ statement: ( createPolicyStatement
 
 { Statement types }
 
-{#}
+{# createPolicyStatement}
 createPolicyStatement:
     CREATE, RS, POLICY_CLASS, RS, expression .
 
-{#}
+{# createAttributeStatement}
 createAttributeStatement:
     CREATE, RS, (OBJECT_ATTRIBUTE | USER_ATTRIBUTE), RS, {name=}expression, RS, IN, RS, {parents=}expression .
 
-{#}
+{# createUserOrObjectStatement}
 createUserOrObjectStatement:
     CREATE, RS, (USER | OBJECT), RS, {name=}expression, RS, IN, RS, {parents=}expression .
 
-{#}
+{# createObligationStatement}
 createObligationStatement:
     CREATE, RS, OBLIGATION, RS, expression, RS, OPEN_CURLY, s, createRuleStatement**s, s, CLOSE_CURLY.
 
@@ -84,7 +84,7 @@ responseStatement:
     | createRuleStatement
     | deleteRuleStatement .
 
-{#}
+{# createProhibitionStatement}
 createProhibitionStatement:
     CREATE, RS, PROHIBITION, RS, {name=}expression, RS, DENY, RS,
     (USER | USER_ATTRIBUTE | PROCESS), RS, {subject=}expression, RS,
@@ -102,33 +102,31 @@ prohibitionContainerList:
 prohibitionContainerExpression:
     (IS_COMPLEMENT, s)?, {container=}expression .
 
-
-{#}
+{# setNodePropertiesStatement}
 setNodePropertiesStatement:
     SET_PROPERTIES, RS, OF, RS, {name=}expression, RS, TO, RS, {properties=}expression .
 
-{#}
+{# assignStatement}
 assignStatement:
     ASSIGN, RS, {childNode=}expression, RS, TO, RS, {parentNodes=}expression .
 
-{#}
+{# deassignStatement}
 deassignStatement:
     DEASSIGN, RS, {childNode=}expression, RS, FROM, RS, {parentNodes=}expression .
 
-{#}
+{# associateStatement}
 associateStatement:
     ASSOCIATE, RS, {ua=}expression, RS, AND, RS, {target=}expression, RS, WITH, RS, {accessRights=}expression .
 
-{#}
+{# dissociateStatement}
 dissociateStatement:
     DISSOCIATE, RS, {ua=}expression, RS, AND, RS, {target=}expression .
 
-{#}
+{# setResourceAccessRightsStatement}
 setResourceAccessRightsStatement:
     SET_RESOURCE_ACCESS_RIGHTS, RS, {accessRights=}expression .
 
-
-{#}
+{# deleteStatement}
 deleteStatement:
     DELETE, RS, deleteType, RS, expression .
 
@@ -140,15 +138,15 @@ deleteType:
 nodeType:
     (POLICY_CLASS | OBJECT_ATTRIBUTE | USER_ATTRIBUTE | OBJECT | USER) .
 
-{#}
+{# deleteRuleStatement}
 deleteRuleStatement:
     DELETE, RS, RULE, RS, {ruleName=}expression, RS, FROM, RS, OBLIGATION, RS, {obligationName=}expression .
 
-{#}
+{# variableDeclarationStatement}
 variableDeclarationStatement:
     (LET | CONST)?, RS, ID, s, EQUALS, s, expression .
 
-{#}
+{# functionDefinitionStatement}
 functionDefinitionStatement:
     FUNCTION, RS, ID, RS, OPEN_PAREN, s, formalArgList, s, CLOSE_PAREN, (s, funcReturnType)?, RS, funcBody .
 
@@ -162,9 +160,9 @@ formalArg:
 formalArgType:
     variableType .
 
-{#}
+{# functionReturnStatement}
 functionReturnStatement:
-    (RETURN, RS, expression | RETURN) .
+    RETURN, (RS, expression)? .
 
 funcReturnType:
     variableType {#VariableReturnType}
@@ -173,7 +171,7 @@ funcReturnType:
 funcBody:
     OPEN_CURLY, s, statement*, s, CLOSE_CURLY.
 
-{#}
+{# foreachStatement}
 foreachStatement:
     FOREACH, RS, {key=}ID, (s, COMMA, s, {mapValue=}ID)?, RS, IN, RS, expression, RS, statementBlock .
 
@@ -183,19 +181,19 @@ forRangeStatement:
     {lowerBound=}(OPEN_BRACKET|OPEN_PAREN), s, {lower=}expression, s, COMMA, {upper=}expression, s, {upperBound=}(CLOSE_BRACKET|CLOSE_PAREN), RS,
     statementBlock .
 
-{#}
+{# breakStatement}
 breakStatement:
     BREAK .
 
-{#}
+{# continueStatement}
 continueStatement:
     CONTINUE .
 
-{#}
+{# functionInvokeStatement}
 functionInvokeStatement:
     functionInvoke.
 
-{#}
+{# ifStatement}
 ifStatement:
     IF, (RS, IS_COMPLEMENT)?, RS, {condition=}expression, RS, statementBlock,
     (RS, elseIfStatement)*,
@@ -256,15 +254,12 @@ functionInvoke:
 functionInvokeArgs:
     OPEN_PAREN, s, expression**(s, COMMA, s), s, CLOSE_PAREN .
 
-
-
 { LEXER RULES }
-  CREATE: "create".
-  DELETE: "delete" .
-   BREAK: "break" .
-CONTINUE: "continue" .
 
-{obligation keywords}
+                 CREATE: "create".
+                 DELETE: "delete" .
+                  BREAK: "break" .
+               CONTINUE: "continue" .
 
          POLICY_ELEMENT: "policy", ES, "element" .
                    RULE: "rule" .
@@ -296,68 +291,68 @@ SET_RESOURCE_ACCESS_RIGHTS: "set", ES, "resource", ES, ACCESS_RIGHTS .
                 OBLIGATION: "obligation" .
              ACCESS_RIGHTS: "access", ES, "rights" .
 
-    POLICY_CLASS: ("policy", ES, "class") | "pc" .
-OBJECT_ATTRIBUTE: (OBJECT, ES, ATTR) | "oa" .
-  USER_ATTRIBUTE: (USER, ES, ATTR) | "ua" .
-          OBJECT: ("object" | "o") .
-            USER: ("user" | "u") .
-            ATTR:  "attribute" .
+        POLICY_CLASS: ("policy", ES, "class") | "pc" .
+    OBJECT_ATTRIBUTE: (OBJECT, ES, ATTR) | "oa" .
+      USER_ATTRIBUTE: (USER, ES, ATTR) | "ua" .
+              OBJECT: ("object" | "o") .
+                USER: ("user" | "u") .
+                ATTR:  "attribute" .
 
-        ANY: "any" .
-        LET: "let" .
-      CONST: "const" .
-   FUNCTION: "function" .
-     RETURN: "return" .
-    BOOLEAN: (TRUE|FALSE).
-       TRUE: "true" .
-      FALSE: "false" .
-STRING_TYPE: "string" .
-BOOLEAN_TYPE: "boolean" .
-   VOID_TYPE: "void" .
+                 ANY: "any" .
+                 LET: "let" .
+               CONST: "const" .
+            FUNCTION: "function" .
+              RETURN: "return" .
+             BOOLEAN: (TRUE|FALSE).
+                TRUE: "true" .
+               FALSE: "false" .
+         STRING_TYPE: "string" .
+         BOOLEAN_TYPE: "boolean" .
+            VOID_TYPE: "void" .
 { not used ARRAY_TYPE: "array" . }
-   MAP_TYPE: "map" .
-    FOREACH: "foreach" .
-        FOR: "for" .
-         IN: "in" .
-         IF: "if" .
-       ELSE: "else" .
-   IN_RANGE: "in", ES, "range" .
+             MAP_TYPE: "map" .
+              FOREACH: "foreach" .
+                  FOR: "for" .
+                   IN: "in" .
+                   IF: "if" .
+                 ELSE: "else" .
+             IN_RANGE: "in", ES, "range" .
 
-              NUMBER: ["0"-"9"]+ .
-                  ID: ["a"-"z"; "A"-"Z"; "_"], ["a"-"z"; "A"-"Z"; "0"-"9"; "_"]+ . { Added initial letter requirement to ID to avoid confusing with NUMBER }
-              STRING: DOUBLE_QUOTE_STRING | SINGLE_QUOTE_STRING.
-DOUBLE_QUOTE_STRING : -'"', ( '\"' | ~[#a|#d|'"'])*, -'"' .
-SINGLE_QUOTE_STRING : -"'", ( "\'" | ~[#a|#d|"'"])*, -"'" .
+               NUMBER: ["0"-"9"]+ .
+                   ID: ["a"-"z"; "A"-"Z"; "_"], ["a"-"z"; "A"-"Z"; "0"-"9"; "_"]+ . { Added initial letter requirement to ID to avoid confusing with NUMBER }
+               STRING: DOUBLE_QUOTE_STRING | SINGLE_QUOTE_STRING.
+ DOUBLE_QUOTE_STRING : -'"', ( '\"' | ~[#a|#d|'"'])*, -'"' .
+ SINGLE_QUOTE_STRING : -"'", ( "\'" | ~[#a|#d|"'"])*, -"'" .
 
 { to do: include LINE_COMMENT }
-{ LINE_COMMENT : '#', ~[#a]*, #a. {, -> channel(HIDDEN)} }
+      { LINE_COMMENT : '#', ~[#a]*, #a. {, -> channel(HIDDEN)} }
 
 
-              COMMA: ',' .
-              COLON: ':' .
-         OPEN_CURLY: '{' .
-        CLOSE_CURLY: '}' .
-       OPEN_BRACKET: '[' .
-      CLOSE_BRACKET: ']' .
-{ not used OPEN_ANGLE_BRACKET: '<' .  }
-{ not used CLOSE_ANGLE_BRACKET: '>' . }
-         OPEN_PAREN: '(' .
-        CLOSE_PAREN: ')' .
-      IS_COMPLEMENT: '!' .
-             EQUALS: '=' .
-             AND_OP: '&&' .
-              OR_OP: '||' .
-          EQUALS_OP: '==' .
-      NOT_EQUALS_OP: '!=' .
+                COMMA: ',' .
+                COLON: ':' .
+           OPEN_CURLY: '{' .
+          CLOSE_CURLY: '}' .
+         OPEN_BRACKET: '[' .
+        CLOSE_BRACKET: ']' .
+  { not used OPEN_ANGLE_BRACKET: '<' .  }
+  { not used CLOSE_ANGLE_BRACKET: '>' . }
+           OPEN_PAREN: '(' .
+          CLOSE_PAREN: ')' .
+        IS_COMPLEMENT: '!' .
+               EQUALS: '=' .
+               AND_OP: '&&' .
+                OR_OP: '||' .
+            EQUALS_OP: '==' .
+        NOT_EQUALS_OP: '!=' .
 
 { derived from iXML grammar https://invisiblexml.org/current/#characters }
 
 { nb [Zs] is Unicode character class for 'separator or space' }
-
-         -s: (whitespace)*. {Optional spacing}
-        -RS: (whitespace)+. {Required spacing}
-         ES: ([Zs]; tab)+.  {Explicit inline spacing}
--whitespace: -[Zs]; tab; lf; cr.
-       -tab: -#9.
-        -lf: -#a.
-        -cr: -#d.
+            
+                   -s: (whitespace)*. {Optional spacing}
+                  -RS: (whitespace)+. {Required spacing}
+                   ES: ([Zs]; tab)+.  {Explicit inline spacing}
+          -whitespace: -[Zs]; tab; lf; cr.
+                 -tab: -#9.
+                  -lf: -#a.
+                  -cr: -#d.
