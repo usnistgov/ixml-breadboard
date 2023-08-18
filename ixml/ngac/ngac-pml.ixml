@@ -1,0 +1,364 @@
+{
+
+NGAC Invisible XML grammar by Wendell Piez Aug 16-18 2023
+
+The grammar below was reworked from a quick hand cast by Steven Pemberton, Aug 2023
+from an original ANTLR grammar provided (PML.g4 in this subdirectory)
+
+}
+
+pml: s, statement**s, s .
+
+statement: ( createPolicyStatement
+           | createAttributeStatement
+           | createUserOrObjectStatement
+           | createObligationStatement
+           | createProhibitionStatement
+           | setNodePropertiesStatement
+           | assignStatement
+           | deassignStatement
+           | associateStatement
+           | dissociateStatement
+           | setResourceAccessRightsStatement
+           | deleteStatement
+           | deleteRuleStatement
+           | variableDeclarationStatement
+           | functionDefinitionStatement
+           | functionReturnStatement
+           | foreachStatement
+           | forRangeStatement
+           | breakStatement
+           | continueStatement
+           | functionInvokeStatement
+           | ifStatement
+           ) .
+
+{ Statement types }
+
+{#}
+createPolicyStatement:
+    CREATE, RS, POLICY_CLASS, RS, expression .
+
+{#}
+createAttributeStatement:
+    CREATE, RS, (OBJECT_ATTRIBUTE | USER_ATTRIBUTE), RS, {name=}expression, RS, IN, RS, {parents=}expression .
+
+{#}
+createUserOrObjectStatement:
+    CREATE, RS, (USER | OBJECT), RS, {name=}expression, RS, IN, RS, {parents=}expression .
+
+{#}
+createObligationStatement:
+    CREATE, RS, OBLIGATION, RS, expression, RS, OPEN_CURLY, s, createRuleStatement**s, s, CLOSE_CURLY.
+
+createRuleStatement:
+    CREATE, RS, RULE, RS, {ruleName=}expression, RS,
+    WHEN, RS, subjectClause, RS,
+    PERFORMS, RS, {performsClause=}expression,
+    (RS, ON, RS, onClause)?, RS,
+    response .
+
+subjectClause:
+    ANY_USER {AnyUserSubject}
+    | USER, RS, {user=}expression {UserSubject}
+    | USERS, RS, {users=}expression {UsersListSubject}
+    | ANY_USER_WITH_ATTRIBUTE, RS, {attribute=}expression {UserAttrSubject}
+    | PROCESS, RS, {process=}expression {ProcessSubject} .
+
+onClause:
+    expression {PolicyElement}
+    | anyPe {AnyPolicyElement}
+    | anyPe, RS, IN, RS, expression {AnyContainedIn}
+    | anyPe, RS, OF, RS, expression {AnyOfSet} .
+    
+anyPe: ANY, RS, POLICY_ELEMENT.
+
+response:
+    DO, s, OPEN_PAREN, s, ID, s, CLOSE_PAREN, s, responseBlock.
+    
+responseBlock:
+    OPEN_CURLY, s, responseStatement**s, s, CLOSE_CURLY .
+    
+responseStatement:
+    statement
+    | createRuleStatement
+    | deleteRuleStatement .
+
+{#}
+createProhibitionStatement:
+    CREATE, RS, PROHIBITION, RS, {name=}expression, RS, DENY, RS,
+    (USER | USER_ATTRIBUTE | PROCESS), RS, {subject=}expression, RS,
+    ACCESS_RIGHTS, RS, {accessRights=}expression, RS,
+    ON, RS, (INTERSECTION|UNION), RS, OF, RS, {containers=}prohibitionContainerList .
+
+{
+ iXML 'prohibitionContainerExpression**(s, COMMA, s)' is the same as
+ 's, prohibitionContainerExpression, (s, COMMA, s, prohibitionContainerExpression)*'
+ i.e. a 'repeat 0' construct (optional, repeatable)
+}
+prohibitionContainerList:
+    OPEN_BRACKET, s, (prohibitionContainerExpression**(s, COMMA, s))?, s, CLOSE_BRACKET .
+
+prohibitionContainerExpression:
+    (IS_COMPLEMENT, s)?, {container=}expression .
+
+
+{#}
+setNodePropertiesStatement:
+    SET_PROPERTIES, RS, OF, RS, {name=}expression, RS, TO, RS, {properties=}expression .
+
+{#}
+assignStatement:
+    ASSIGN, RS, {childNode=}expression, RS, TO, RS, {parentNodes=}expression .
+
+{#}
+deassignStatement:
+    DEASSIGN, RS, {childNode=}expression, RS, FROM, RS, {parentNodes=}expression .
+
+{#}
+associateStatement:
+    ASSOCIATE, RS, {ua=}expression, RS, AND, RS, {target=}expression, RS, WITH, RS, {accessRights=}expression .
+
+{#}
+dissociateStatement:
+    DISSOCIATE, RS, {ua=}expression, RS, AND, RS, {target=}expression .
+
+{#}
+setResourceAccessRightsStatement:
+    SET_RESOURCE_ACCESS_RIGHTS, RS, {accessRights=}expression .
+
+
+{#}
+deleteStatement:
+    DELETE, RS, deleteType, RS, expression .
+
+deleteType:
+    nodeType {#DeleteNode}
+    | OBLIGATION {#DeleteObligation}
+    | PROHIBITION {#DeleteProhibition} .
+
+nodeType:
+    (POLICY_CLASS | OBJECT_ATTRIBUTE | USER_ATTRIBUTE | OBJECT | USER) .
+
+{#}
+deleteRuleStatement:
+    DELETE, RS, RULE, RS, {ruleName=}expression, RS, FROM, RS, OBLIGATION, RS, {obligationName=}expression .
+
+{#}
+variableDeclarationStatement:
+    (LET | CONST)?, RS, ID, s, EQUALS, s, expression .
+
+{#}
+functionDefinitionStatement:
+    FUNCTION, RS, ID, RS, OPEN_PAREN, s, formalArgList, s, CLOSE_PAREN, (s, funcReturnType)?, RS, funcBody .
+
+{ 'formalArg++(s, COMMA, s)' same as 
+    '(formalArg, (s, COMMA, s, formalArg)*)' }
+formalArgList: formalArg++(s, COMMA, s) .
+
+formalArg:
+    formalArgType, RS, ID .
+
+formalArgType:
+    variableType .
+
+{#}
+functionReturnStatement:
+    (RETURN, RS, expression | RETURN) .
+
+funcReturnType:
+    variableType {#VariableReturnType}
+    | VOID_TYPE {#VoidReturnType}.
+
+funcBody:
+    OPEN_CURLY, s, statement*, s, CLOSE_CURLY.
+
+{#}
+foreachStatement:
+    FOREACH, RS, {key=}ID, (s, COMMA, s, {mapValue=}ID)?, RS, IN, RS, expression, RS, statementBlock .
+
+{# forRange does not enforce bracket-matching? }
+forRangeStatement:
+    FOR, RS, ID, RS, IN_RANGE, s,
+    {lowerBound=}(OPEN_BRACKET|OPEN_PAREN), s, {lower=}expression, s, COMMA, {upper=}expression, s, {upperBound=}(CLOSE_BRACKET|CLOSE_PAREN), RS,
+    statementBlock .
+
+{#}
+breakStatement:
+    BREAK .
+
+{#}
+continueStatement:
+    CONTINUE .
+
+{#}
+functionInvokeStatement:
+    functionInvoke.
+
+{#}
+ifStatement:
+    IF, (RS, IS_COMPLEMENT)?, RS, {condition=}expression, RS, statementBlock,
+    (RS, elseIfStatement)*,
+    RS, elseStatement? .
+
+elseIfStatement:
+    ELSE, RS, IF, (RS, IS_COMPLEMENT)?, RS, {condition=}expression, RS, statementBlock .
+
+elseStatement:
+    ELSE, RS, statementBlock .
+
+variableType:
+    STRING_TYPE {#StringType}
+    | BOOLEAN_TYPE {#BooleanType}
+    | arrayType {#ArrayVarType}
+    | mapType {#MapVarType}
+    | ANY {#AnyType} .
+
+mapType: MAP_TYPE, OPEN_BRACKET, {keyType=}variableType, CLOSE_BRACKET, {valueType=}variableType .
+
+arrayType: OPEN_BRACKET, CLOSE_BRACKET, variableType .
+
+statementBlock: OPEN_CURLY, statement*, CLOSE_CURLY .
+
+expression:
+    variableReference
+    | functionInvoke
+    | literal
+    | {left=}expression, s, (EQUALS_OP | NOT_EQUALS_OP), s, {right=}expression
+    | {left=}expression, s, (AND_OP | OR_OP), s, {right=}expression.
+
+array:
+    OPEN_BRACKET, (s, expression, (s, COMMA, s, expression)*)?, s, CLOSE_BRACKET .
+
+map:
+    OPEN_CURLY, (mapEntry**(s, COMMA, s, mapEntry))?, s, CLOSE_CURLY .
+
+mapEntry:
+    {key=}expression, s, COLON, s, {value=}expression .
+
+{ ID, s, (OPEN_BRACKET, s, {key=}expression, s, CLOSE_BRACKET)++s . }
+entryReference:
+    ID, (s, OPEN_BRACKET, s, {key=}expression, s, CLOSE_BRACKET)+ .
+
+literal:
+    STRING {#StringLiteral}
+    | BOOLEAN {#BooleanLiteral}
+    | NUMBER {#NumberLiteral}
+    | array {#ArrayLiteral}
+    | map {#MapLiteral} .
+
+variableReference:
+    ID {#ReferenceByID}
+    | entryReference {#ReferenceByEntry} .
+
+functionInvoke:
+    ID, s, functionInvokeArgs .
+
+functionInvokeArgs:
+    OPEN_PAREN, s, (expression**(s, COMMA, s))?, s, CLOSE_PAREN .
+
+
+
+{ LEXER RULES }
+  CREATE: "create".
+  DELETE: "delete" .
+   BREAK: "break" .
+CONTINUE: "continue" .
+
+{obligation keywords}
+
+         POLICY_ELEMENT: "policy", ES, "element" .
+                   RULE: "rule" .
+                   WHEN: "when" .
+               PERFORMS: "performs" .
+                     AS: "as" .
+                     ON: "on" .
+                     DO: "do" .
+               ANY_USER: ANY, ES, USER.
+                  USERS: USER, "s" .
+ANY_USER_WITH_ATTRIBUTE: ANY_USER, ES, "with", ES, ATTR.
+                PROCESS: "process" .
+           INTERSECTION: "intersection" .
+                  UNION: "union" .
+
+SET_RESOURCE_ACCESS_RIGHTS: "set", ES, "resource", ES, ACCESS_RIGHTS .
+                    ASSIGN: "assign" .
+                  DEASSIGN: "deassign" .
+                      FROM: "from" .
+            SET_PROPERTIES: "set", ES, "properties" .
+                        OF: "of" .
+                        TO: "to" .
+                 ASSOCIATE: "associate" .
+                       AND: "and" .
+                      WITH: "with" .
+                DISSOCIATE: "dissociate" .
+                      DENY: "deny" .
+               PROHIBITION: "prohibition" .
+                OBLIGATION: "obligation" .
+             ACCESS_RIGHTS: "access", ES, "rights" .
+
+    POLICY_CLASS: ("policy", ES, "class") | "pc" .
+OBJECT_ATTRIBUTE: (OBJECT, ES, ATTR) | "oa" .
+  USER_ATTRIBUTE: (USER, ES, ATTR) | "ua" .
+          OBJECT: ("object" | "o") .
+            USER: ("user" | "u") .
+            ATTR:  "attribute" .
+
+        ANY: "any" .
+        LET: "let" .
+      CONST: "const" .
+   FUNCTION: "function" .
+     RETURN: "return" .
+    BOOLEAN: (TRUE|FALSE).
+       TRUE: "true" .
+      FALSE: "false" .
+STRING_TYPE: "string" .
+BOOLEAN_TYPE: "boolean" .
+   VOID_TYPE: "void" .
+{ not used ARRAY_TYPE: "array" . }
+   MAP_TYPE: "map" .
+    FOREACH: "foreach" .
+        FOR: "for" .
+         IN: "in" .
+         IF: "if" .
+       ELSE: "else" .
+   IN_RANGE: "in", ES, "range" .
+
+              NUMBER: ["0"-"9"]+ .
+                  ID: ["a"-"z"; "A"-"Z"; "_"], ["a"-"z"; "A"-"Z"; "0"-"9"; "_"]+ . { Added initial letter requirement to ID to avoid confusing with NUMBER }
+              STRING: DOUBLE_QUOTE_STRING | SINGLE_QUOTE_STRING.
+DOUBLE_QUOTE_STRING : -'"', ( '\"' | ~[#a|#d|'"'])*, -'"' .
+SINGLE_QUOTE_STRING : -"'", ( "\'" | ~[#a|#d|"'"])*, -"'" .
+
+{ to do: include LINE_COMMENT }
+{ LINE_COMMENT : '#', ~[#a]*, #a. {, -> channel(HIDDEN)} }
+
+
+              COMMA: ',' .
+              COLON: ':' .
+         OPEN_CURLY: '{' .
+        CLOSE_CURLY: '}' .
+       OPEN_BRACKET: '[' .
+      CLOSE_BRACKET: ']' .
+{ not used OPEN_ANGLE_BRACKET: '<' .  }
+{ not used CLOSE_ANGLE_BRACKET: '>' . }
+         OPEN_PAREN: '(' .
+        CLOSE_PAREN: ')' .
+      IS_COMPLEMENT: '!' .
+             EQUALS: '=' .
+             AND_OP: '&&' .
+              OR_OP: '||' .
+          EQUALS_OP: '==' .
+      NOT_EQUALS_OP: '!=' .
+
+{ derived from iXML grammar https://invisiblexml.org/current/#characters }
+
+{ nb [Zs] is Unicode character class for 'separator or space' }
+
+         -s: (whitespace)*. {Optional spacing}
+        -RS: (whitespace)+. {Required spacing}
+         ES: ([Zs]; tab)+.  {Explicit inline spacing}
+-whitespace: -[Zs]; tab; lf; cr.
+       -tab: -#9.
+        -lf: -#a.
+        -cr: -#d.

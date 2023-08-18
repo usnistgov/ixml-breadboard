@@ -24,7 +24,7 @@ In addition to the utilities provided and documented in this repository, these a
 
 - [Invisible XML](https://invisiblexml.org/) community landing page maintains many links including (or jump to)
   - [Invisible XML Specification](https://invisiblexml.org/1.0/) version 1.0
-  - [Steven Pemberton’s hands-on tutorial](http://www.cwi.nl/~steven/ixml/tutorial/)
+  - Steven Pemberton’s [hands-on tutorial](http://www.cwi.nl/~steven/ixml/tutorial/)
   - Other tutorials and intro treatments including from Norm Tovey-Walsh
 
 ## How to Do It
@@ -33,7 +33,7 @@ Start by browsing the repository to survey its contents and state.
 
 For guidance on available scripts, see the [`src` directory readme file](src/readme.md).
 
-In the `ixml` directory are several samples of iXML grammars (applications) at various stages of progress. These can also be tested using external utilities such as  [iXML Workbench](https://johnlumley.github.io/jwiXML.xhtml).
+In the [`ixml`](ixml/) directory are several samples of iXML grammars (applications) at various stages of progress. These can also be tested using external utilities such as  [iXML Workbench](https://johnlumley.github.io/jwiXML.xhtml).
 
 https://github.com/invisibleXML/ixml/tree/master/samples also gives some examples from community members.
 
