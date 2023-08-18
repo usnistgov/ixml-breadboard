@@ -169,7 +169,7 @@ funcReturnType:
     | VOID_TYPE {#VoidReturnType}.
 
 funcBody:
-    OPEN_CURLY, s, statement*, s, CLOSE_CURLY.
+    OPEN_CURLY, s, statement**s, s, CLOSE_CURLY.
 
 {# foreachStatement}
 foreachStatement:
