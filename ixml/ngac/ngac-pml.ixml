@@ -97,7 +97,7 @@ createProhibitionStatement:
  i.e. a 'repeat 0' construct (optional, repeatable)
 }
 prohibitionContainerList:
-    OPEN_BRACKET, s, (prohibitionContainerExpression**(s, COMMA, s))?, s, CLOSE_BRACKET .
+    OPEN_BRACKET, s, prohibitionContainerExpression**(s, COMMA, s), s, CLOSE_BRACKET .
 
 prohibitionContainerExpression:
     (IS_COMPLEMENT, s)?, {container=}expression .
@@ -231,12 +231,11 @@ array:
     OPEN_BRACKET, (s, expression, (s, COMMA, s, expression)*)?, s, CLOSE_BRACKET .
 
 map:
-    OPEN_CURLY, (mapEntry**(s, COMMA, s, mapEntry))?, s, CLOSE_CURLY .
+    OPEN_CURLY, s, mapEntry**(s, COMMA, s), s, CLOSE_CURLY .
 
 mapEntry:
     {key=}expression, s, COLON, s, {value=}expression .
 
-{ ID, s, (OPEN_BRACKET, s, {key=}expression, s, CLOSE_BRACKET)++s . }
 entryReference:
     ID, (s, OPEN_BRACKET, s, {key=}expression, s, CLOSE_BRACKET)+ .
 
@@ -255,7 +254,7 @@ functionInvoke:
     ID, s, functionInvokeArgs .
 
 functionInvokeArgs:
-    OPEN_PAREN, s, (expression**(s, COMMA, s))?, s, CLOSE_PAREN .
+    OPEN_PAREN, s, expression**(s, COMMA, s), s, CLOSE_PAREN .
 
 
 
