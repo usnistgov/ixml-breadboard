@@ -31,15 +31,46 @@ In addition to the utilities provided and documented in this repository, these a
 
 Start by browsing the repository to survey its contents and state.
 
-For guidance on available scripts, see the [`src` directory readme file](src/readme.md).
+### iXML examples
 
 In the [`ixml`](ixml/) directory are several samples of iXML grammars (applications) at various stages of progress. These can also be tested using external utilities such as  [iXML Workbench](https://johnlumley.github.io/jwiXML.xhtml).
 
 https://github.com/invisibleXML/ixml/tree/master/samples also gives some examples from community members.
 
+### Scripted routines supporting batch (standalone) processing
+
+(*Planned*)
+
+For guidance on available scripts, see the [`src` directory readme file](src/readme.md).
+
+### Applications in the browser
+
+Wherever an HTML file appears, typically an application can be served from a plain vanilla web server.
+
+For example, in file `index.html` this directory provides a "workbench" application for testing an iXML parse. To run it:
+
+- Start a web server (Apache, Node.js http-server or your preference) from this directory (i.e. using it as root), e.g.
+  - open a command prompt
+  - start `http-server`
+- Using a current browser, open `http://localhost:8080/index.html`
+- Examine and test the application
+
+When started at the root of the project, a web server can also serve any file in the project, subject to its configuration, and different experiments may offer different entry points.
+
 ## Dependencies
 
-These scripts and libraries rely on `bash`, Maven, XML Calabash, Saxon, and components for Calabash as documented for iXML.
+### Browser applications
+
+The browser applications generally rely on two libraries for Invisible XML and XSLT 3.0 respectively:
+
+- [SaxonJS](https://saxonica.com/saxon-js/index.xml), by Michael Kay and Saxonica [Saxonica](https://saxonica.com/welcome/welcome.xml)
+-  [jωiXML](https://github.com/johnlumley/jwiXML) SaxonJS application by John Lumley, with a test application, the [iXML Workbench](https://johnlumley.github.io/jwiXML.xhtml)
+
+These are not quite open source and are variously encumbered; see licenses provided.
+
+### Scripts
+
+These scripts and libraries rely on `bash`, Maven, XML Calabash, Saxon, and components for Calabash as documented for iXML. These are all open source (while components may be experimental / in development).
 
 Install [Maven](https://maven.apache.org) to manage software dependencies; check for or install [`bash`](https://www.gnu.org/software/bash/) to run invocation scripts.
 
@@ -48,13 +79,14 @@ Many thanks to the developers of all layers in this impressive commodity stack!
 - [XML Calabash](https://xmlcalabash.com/) and [NineML]()
 - [Saxon](https://saxonica.com/welcome/welcome.xml)
 
-
 ## Project planning
 
 Planned:
 
 - Landing page with links to online tools and guidance (this page)
-- Working grammars
+- Working grammars 
+- in-browser iXML Breadboard based on jwiXML
+  - application-specific SaxonJS processors 
 - CL support via XML Calabash and CoffeePot coffee.nineml.org
   - end to end
   - iXML parsing as in-Saxon function call (sacks.nineml.org)

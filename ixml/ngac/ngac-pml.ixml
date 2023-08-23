@@ -1,11 +1,16 @@
-{
+{_____|______|______|______|______|______|______|______|______|______|______|______|
 
-NGAC Invisible XML grammar by Wendell Piez Aug 16-18 2023
+NGAC PML (Policy Markup Language) Invisible XML grammar by Wendell Piez, August 2023
 
-The grammar below was reworked from a quick hand cast by Steven Pemberton, Aug 2023
-from an original ANTLR grammar provided (PML.g4 in this subdirectory)
+Cast from an ANTLR grammar provided (PML.g4 in this subdirectory)
+  copied from repo https://github.com/PM-Master/policy-machine-core.
 
-}
+Thanks to SP (invisiblexml.org) for the first cut.
+
+......!......!......!......!......!......!......!......!......!......!......!......!
+______|______|______|______|______|______|______|______|______|______|______|______|}
+
+{XXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#}
 
 pml: s, statement**s, s .
 
@@ -49,7 +54,7 @@ createUserOrObjectStatement:
 
 {# createObligationStatement}
 createObligationStatement:
-    CREATE, RS, OBLIGATION, RS, expression, RS, OPEN_CURLY, s, createRuleStatement**s, s, CLOSE_CURLY.
+    CREATE, RS, OBLIGATION, RS, expression, RS, OPEN_CURLY, s, createRuleStatement**s, s, CLOSE_CURLY .
 
 createRuleStatement:
     CREATE, RS, RULE, RS, {ruleName=}expression, RS,
@@ -71,10 +76,10 @@ onClause:
     | anyPe, RS, IN, RS, expression {AnyContainedIn}
     | anyPe, RS, OF, RS, expression {AnyOfSet} .
     
-anyPe: ANY, RS, POLICY_ELEMENT.
+anyPe: ANY, RS, POLICY_ELEMENT .
 
 response:
-    DO, s, OPEN_PAREN, s, ID, s, CLOSE_PAREN, s, responseBlock.
+    DO, s, OPEN_PAREN, s, ID, s, CLOSE_PAREN, s, responseBlock .
     
 responseBlock:
     OPEN_CURLY, s, responseStatement**s, s, CLOSE_CURLY .
@@ -166,10 +171,10 @@ functionReturnStatement:
 
 funcReturnType:
     variableType {#VariableReturnType}
-    | VOID_TYPE {#VoidReturnType}.
+    | VOID_TYPE {#VoidReturnType} .
 
 funcBody:
-    OPEN_CURLY, s, statement**s, s, CLOSE_CURLY.
+    OPEN_CURLY, s, statement**s, s, CLOSE_CURLY .
 
 {# foreachStatement}
 foreachStatement:
@@ -191,7 +196,7 @@ continueStatement:
 
 {# functionInvokeStatement}
 functionInvokeStatement:
-    functionInvoke.
+    functionInvoke .
 
 {# ifStatement}
 ifStatement:
@@ -216,17 +221,17 @@ mapType: MAP_TYPE, OPEN_BRACKET, {keyType=}variableType, CLOSE_BRACKET, {valueTy
 
 arrayType: OPEN_BRACKET, CLOSE_BRACKET, variableType .
 
-statementBlock: OPEN_CURLY, statement*, CLOSE_CURLY .
+statementBlock: OPEN_CURLY, s, statement**RS, s, CLOSE_CURLY .
 
 expression:
     variableReference
     | functionInvoke
     | literal
     | {left=}expression, s, (EQUALS_OP | NOT_EQUALS_OP), s, {right=}expression
-    | {left=}expression, s, (AND_OP | OR_OP), s, {right=}expression.
+    | {left=}expression, s, (AND_OP | OR_OP), s, {right=}expression .
 
 array:
-    OPEN_BRACKET, (s, expression, (s, COMMA, s, expression)*)?, s, CLOSE_BRACKET .
+    OPEN_BRACKET, s, expression**(s, COMMA, s), s, CLOSE_BRACKET .
 
 map:
     OPEN_CURLY, s, mapEntry**(s, COMMA, s), s, CLOSE_CURLY .
@@ -254,9 +259,11 @@ functionInvoke:
 functionInvokeArgs:
     OPEN_PAREN, s, expression**(s, COMMA, s), s, CLOSE_PAREN .
 
+{XXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#}
+
 { LEXER RULES }
 
-                 CREATE: "create".
+                 CREATE: "create" .
                  DELETE: "delete" .
                   BREAK: "break" .
                CONTINUE: "continue" .
@@ -268,9 +275,9 @@ functionInvokeArgs:
                      AS: "as" .
                      ON: "on" .
                      DO: "do" .
-               ANY_USER: ANY, ES, USER.
+               ANY_USER: ANY, ES, USER .
                   USERS: USER, "s" .
-ANY_USER_WITH_ATTRIBUTE: ANY_USER, ES, "with", ES, ATTR.
+ANY_USER_WITH_ATTRIBUTE: ANY_USER, ES, "with", ES, ATTR .
                 PROCESS: "process" .
            INTERSECTION: "intersection" .
                   UNION: "union" .
@@ -303,7 +310,7 @@ SET_RESOURCE_ACCESS_RIGHTS: "set", ES, "resource", ES, ACCESS_RIGHTS .
                CONST: "const" .
             FUNCTION: "function" .
               RETURN: "return" .
-             BOOLEAN: (TRUE|FALSE).
+             BOOLEAN: (TRUE|FALSE) .
                 TRUE: "true" .
                FALSE: "false" .
          STRING_TYPE: "string" .
@@ -319,13 +326,14 @@ SET_RESOURCE_ACCESS_RIGHTS: "set", ES, "resource", ES, ACCESS_RIGHTS .
              IN_RANGE: "in", ES, "range" .
 
                NUMBER: ["0"-"9"]+ .
-                   ID: ["a"-"z"; "A"-"Z"; "_"], ["a"-"z"; "A"-"Z"; "0"-"9"; "_"]+ . { Added initial letter requirement to ID to avoid confusing with NUMBER }
-               STRING: DOUBLE_QUOTE_STRING | SINGLE_QUOTE_STRING.
+                   ID: ["a"-"z"; "A"-"Z"; "_"], ["a"-"z"; "A"-"Z"; "0"-"9"; "_"]+ .
+                       { Added initial letter requirement to ID to avoid confusing with NUMBER }
+               STRING: DOUBLE_QUOTE_STRING | SINGLE_QUOTE_STRING .
  DOUBLE_QUOTE_STRING : -'"', ( '\"' | ~[#a|#d|'"'])*, -'"' .
  SINGLE_QUOTE_STRING : -"'", ( "\'" | ~[#a|#d|"'"])*, -"'" .
 
 { to do: include LINE_COMMENT }
-      { LINE_COMMENT : '#', ~[#a]*, #a. {, -> channel(HIDDEN)} }
+      { LINE_COMMENT : '#', ~[#a]*, #a . {, -> channel(HIDDEN)} }
 
 
                 COMMA: ',' .
@@ -334,7 +342,7 @@ SET_RESOURCE_ACCESS_RIGHTS: "set", ES, "resource", ES, ACCESS_RIGHTS .
           CLOSE_CURLY: '}' .
          OPEN_BRACKET: '[' .
         CLOSE_BRACKET: ']' .
-  { not used OPEN_ANGLE_BRACKET: '<' .  }
+  { not used  OPEN_ANGLE_BRACKET: '<' .  }
   { not used CLOSE_ANGLE_BRACKET: '>' . }
            OPEN_PAREN: '(' .
           CLOSE_PAREN: ')' .
@@ -349,10 +357,13 @@ SET_RESOURCE_ACCESS_RIGHTS: "set", ES, "resource", ES, ACCESS_RIGHTS .
 
 { nb [Zs] is Unicode character class for 'separator or space' }
             
-                   -s: (whitespace)*. {Optional spacing}
-                  -RS: (whitespace)+. {Required spacing}
-                   ES: ([Zs]; tab)+.  {Explicit inline spacing}
-          -whitespace: -[Zs]; tab; lf; cr.
-                 -tab: -#9.
-                  -lf: -#a.
-                  -cr: -#d.
+                   -s: (whitespace)* . {Optional spacing}
+                  -RS: (whitespace)+ . {Required spacing}
+                   ES: ([Zs]; tab)+ .  {Explicit inline spacing}
+          -whitespace: -[Zs]; tab; lf; cr .
+                 -tab: -#9 .
+                  -lf: -#a .
+                  -cr: -#d .
+
+{end}
+{XXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#XXXXXX#}
