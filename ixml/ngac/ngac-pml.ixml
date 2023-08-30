@@ -183,7 +183,7 @@ foreachStatement:
 {# forRange does not enforce bracket-matching? }
 forRangeStatement:
     FOR, RS, ID, RS, IN_RANGE, s,
-    {lowerBound=}(OPEN_BRACKET|OPEN_PAREN), s, {lower=}expression, s, COMMA, {upper=}expression, s, {upperBound=}(CLOSE_BRACKET|CLOSE_PAREN), RS,
+    {lowerBound=}(OPEN_BRACKET|OPEN_PAREN), s, {lower=}expression, s, COMMA, s, {upper=}expression, s, {upperBound=}(CLOSE_BRACKET|CLOSE_PAREN), RS,
     statementBlock .
 
 {# breakStatement}
