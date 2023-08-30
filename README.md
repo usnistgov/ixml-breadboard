@@ -63,10 +63,10 @@ When started at the root of the project, a web server can also serve any file in
 
 The browser applications generally rely on two libraries for Invisible XML and XSLT 3.0 respectively:
 
-- [SaxonJS](https://saxonica.com/saxon-js/index.xml), by Michael Kay and Saxonica [Saxonica](https://saxonica.com/welcome/welcome.xml)
 -  [jωiXML](https://github.com/johnlumley/jwiXML) SaxonJS application by John Lumley, with a test application, the [iXML Workbench](https://johnlumley.github.io/jwiXML.xhtml)
+- [SaxonJS](https://saxonica.com/saxon-js/index.xml), by Michael Kay and Saxonica [Saxonica](https://saxonica.com/welcome/welcome.xml)
 
-These are not quite open source and are variously encumbered; see licenses provided.
+These are used and deployed in accordance with [their licenses](THIRD_PARTY_LICENSES.md).
 
 ### Scripts
 
@@ -76,8 +76,10 @@ Install [Maven](https://maven.apache.org) to manage software dependencies; check
 
 Many thanks to the developers of all layers in this impressive commodity stack!
 
-- [XML Calabash](https://xmlcalabash.com/) and [NineML]()
-- [Saxon](https://saxonica.com/welcome/welcome.xml)
+- [XML Calabash](https://xmlcalabash.com/) and [NineML]() - Norm Tovey-Walsh
+- [Saxon](https://saxonica.com/welcome/welcome.xml) - Mike Kay and associates
+- [XML](https://www.w3.org/XML/) and [XSLT](https://www.w3.org/Style/XSL/)
+- Java, open-source operating systems, network protocols ...
 
 ## Project planning
 

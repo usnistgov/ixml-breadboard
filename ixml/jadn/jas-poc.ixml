@@ -1,0 +1,148 @@
+{_____|______|______|______|______|______|______|______|______|______|______|______|
+
+JAS is JDEN Abstract Syntax or 'JADN Source' - a notation for describing data sets
+as abstractions.
+
+From a specification in JAS an equivalent JADN instance can be derived.
+JADN is the analogous format expressed in Javascript. From either of these,
+subsequent artifacts and engines may be derived, including schemas.
+
+JAS iXML will enable parsing JAS into an XML-based pipeline amenable to transformation.
+
+Goals include
+- convert JAS to JADN
+- produce artifacts such as schemas and docs (see XSLX demo in repo)
+- align with usnistgov/metaschema
+
+Cast from https://github.com/OpenC2-org/jadn/blob/master/libs/convert/jas.ebnf
+
+......!......!......!......!......!......!......!......!......!......!......!......!
+______|______|______|______|______|______|______|______|______|______|______|______|}
+
+
+jas: head, meta, s, types, s .
+
+head: hline**NL, s .
+
+
+{ Anything up to the new line except '/*' }
+-hline:  ES?, (~["/"|#a|#d|#9|Zs] | ("/", (~["*"|#a|#d|#9|Zs])? )), -nnl* .
+
+{ Same except up to '*/' and excluding ': ' - including them introduces ambiguity }
+-mline:  ES?, (~["*"|":"|#a|#d|#9|Zs] | ("*", (~["/"|":"|#a|#d|#9|Zs])? )), (~[#a|#d|":"] | (":", ~[Zs]) )* .
+
+meta: begin, (NL, KVal)*, s, end .
+
+begin: "/*" .
+
+{ key must be followed by colon-space ": " to avoid ambiguity }
+KVal: key, -": ", Val .
+
+Val: mline++NL .
+
+key: -name .
+
+name: ["a"-"z"; "A"-"Z"; "0"-"9"; "_"; "-"]+ .
+          
+end: "*/" .
+
+nnl: ~[#a|#d] . { any char not a line end }
+NL: (lf | cr)+ .
+
+                   -s: (whitespace)* . {Optional spacing}
+                  -RS: (whitespace)+ . {Required spacing}
+                   ES: ([Zs]; tab)+ .  {Explicit inline spacing}
+          -whitespace: -[Zs]; tab; lf; cr .
+                 -tab: -#9 .
+                  -lf: -#a .
+                  -cr: -#d .
+
+types: type++NL. { Type definitions }
+
+type: name, RS, define, RS, typename, topts?, s, cmt?, fields? .
+
+typename: -name .
+
+define: "::=" .
+
+topts: pattern+ .
+
+{ dropping quote marks and 'PATTERN' from serialization }
+pattern: -"(", ((-"PATTERN", s, str)|name), -")" .
+
+{ str = '"' @:{ !'"' /./ } '"' ; a double-quoted string (cannot contain double quotes) }
+str: -'"', ~['"']*, -'"' .
+
+{ EBNF cmt = "--" /\s*/ @:/.*/ ; }
+cmt: -"--", ~[#a]* .
+
+fields: -"{", s, (cmt, NL)?, field**(ccomma), (s, cmt)?, s, -"}" .
+
+ccomma: s, -",", (s, cmt)?, s .
+
+field: (qname, s, etag) |
+       ( (qname|"*"), (s, ftag)?, s, typeqname, (s, fopts)? ) .
+
+{ /(\w+:)?(\w|_|-)+/ }
+qname: (-name, -":")?, -name .
+
+typeqname: -qname .
+
+{etag = "(" @:int ")" ; }
+etag: -"(", -int, -")" .
+
+ftag: -"[", -int, -"]" .
+
+int: ["0"-"9"]+ .
+
+fopts: ( "OPTIONAL"             { Field options }
+      | ("MIN", s, int)
+      | ("MAX", s, int)
+      | (".&", name) 
+      )++RS .
+
+
+
+{
+
+# EBNF Grammar for JADN Abstract Syntax (JAS) files
+# Compile grammar into parser using:  $ python -m grako jas.ebnf -o jas_parse.py
+
+@@grammar :: jas
+
+jas = head:{!(name define) !begin any}    # Ignore anything before meta
+    metas:[meta]                          # Administrative information - key:value pairs
+    types:{type}+ $                       # Datatype definitions
+    ;
+meta = begin {!end [[WS] NL] @:KVal} end ;
+begin = "/*" ;
+end = "*/" ;
+KVal = key:name ":" val:{Val}+ ;          # Whitespace is meaningful within meta definitions
+Val = WS @:/.*/ NL ;
+WS = /\s+/ ;
+NL = /(\n|\r)+/ ;
+
+type = name:name define type:name [topts:topts] [td1:cmt] [f:fields] ~ ;
+any =  /(\w|_|-)+|\s+|./ ;
+name = /(\w|_|-)+/ ;
+qname = /(\w+:)?(\w|_|-)+/ ;
+int = /\d+/ ;
+define = "::=" ;
+cmt = "--" /\s*/ @:/.*/ ;
+str = '"' @:{ !'"' /./ } '"' ;
+fields = "{" [td2:cmt] fields:",".{ field } "}" ;
+field = ( [fd1:cmt] name:qname tag:etag [fd2:cmt] )                                   # Enumerated value, or
+      | ( [fd1:cmt] name:(qname|"*") [tag:ftag] type:qname [fopts:fopts] [fd2:cmt] )  #  structured datatype field
+      ~ ;
+etag = "(" @:int ")" ;
+ftag = "[" @:int "]" ;
+pattern = "(" @:(("PATTERN" str)|name) ")" ;        # TODO: hack element type into topts - FIX ME
+topts = { pattern                # Datatype options
+      }+ ;
+fopts = { "OPTIONAL"             # Field options
+      | "MIN" int
+      | "MAX" int
+      | ".&" name
+      }+ ;
+
+}
