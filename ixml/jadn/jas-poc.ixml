@@ -1,7 +1,8 @@
 {_____|______|______|______|______|______|______|______|______|______|______|______|
 
-JAS is JDEN Abstract Syntax or 'JADN Source' - a notation for describing data sets
-as abstractions.
+JAS is JADN Abstract Syntax or 'JADN Source' - a notation for describing data sets
+as abstractions, capturing information properties and relations apart from syntax 
+or serialization.
 
 From a specification in JAS an equivalent JADN instance can be derived.
 JADN is the analogous format expressed in Javascript. From either of these,
@@ -78,7 +79,7 @@ cmt: -"--", ~[#a]* .
 
 fields: -"{", s, (cmt, NL)?, field**(ccomma), (s, cmt)?, s, -"}" .
 
-ccomma: s, -",", (s, cmt)?, s .
+ccomma: s, -",", (s, cmt)?, RS .
 
 field: (qname, s, etag) |
        ( (qname|"*"), (s, ftag)?, s, typeqname, (s, fopts)? ) .

@@ -43,7 +43,9 @@ https://github.com/invisibleXML/ixml/tree/master/samples also gives some example
 
 For guidance on available scripts, see the [`src` directory readme file](src/readme.md).
 
-### Applications in the browser
+### Applications in the browser (forthcoming)
+
+*(Planned. This is how easy it will be.)*
 
 Wherever an HTML file appears, typically an application can be served from a plain vanilla web server.
 
@@ -61,6 +63,8 @@ When started at the root of the project, a web server can also serve any file in
 
 ### Browser applications
 
+*(Planned)*
+
 The browser applications generally rely on two libraries for Invisible XML and XSLT 3.0 respectively:
 
 -  [jωiXML](https://github.com/johnlumley/jwiXML) SaxonJS application by John Lumley, with a test application, the [iXML Workbench](https://johnlumley.github.io/jwiXML.xhtml)
@@ -69,6 +73,8 @@ The browser applications generally rely on two libraries for Invisible XML and X
 These are used and deployed in accordance with [their licenses](THIRD_PARTY_LICENSES.md).
 
 ### Scripts
+
+*(Planned)*
 
 These scripts and libraries rely on `bash`, Maven, XML Calabash, Saxon, and components for Calabash as documented for iXML. These are all open source (while components may be experimental / in development).
 
@@ -95,7 +101,7 @@ Planned:
   - 'grammar compiler' producing a portable XSLT module for any grammar?
 - XSpec testing harness for parsers
 - Resource kit for experimenting
-  may be PoCs for other projects
+  - may be PoCs for other projects
   - NGAC
   - XPath 3.0
   - Metapath (port from ANTLR)
@@ -106,10 +112,10 @@ Goals:
 - Knowledge and command of grammars (specifically iXML grammars) as a way of specifying and processing inputs
 - iXML tools support
   - XProc (following Norm TW)
-  Plugin support for any iXML grammar into an XProc pipeline
-  both as (primary or ) inputs
-  and embedded (function calls)
-  validation and error reporting support
+  - Plugin support for any iXML grammar into an XProc pipeline
+    - both as (primary or ) inputs
+    - and embedded (function calls)
+  - validation and error reporting support
 - functionalities in application
   - Metapath
   - NGAC?
