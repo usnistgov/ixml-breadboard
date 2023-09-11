@@ -1,0 +1,12 @@
+{ splits space from non-space }
+
+statement: ws, run++RS, ws .
+
+run: char+ .
+
+ws: [Zs|#9|#a|#d]* .
+
+RS: [Zs|#9|#a|#d]+ .
+
+-char: ~[Zs|#9|#a|#d] .
+

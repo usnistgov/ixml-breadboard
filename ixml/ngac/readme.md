@@ -10,20 +10,58 @@ In this directory:
 - `ngac-pml.ixml` - An iXML grammar based on the ANTLR grammar - cast and refined by hand
 - `PM-exampleA-ngac.txt` an example of a PML instance for testing - see [PM repo](https://github.com/PM-Master/policy-machine-core/tree/master/pml)
 
-# Plans
+## To try the web demo
 
-NGAC CSX / SaxonJS application
-  uses jwiXML and SaxonJS to render PML in the browser
-  does useful things with it?
-    - validate instances
-    - process information
+See an [iXML PML demonstration](https://pages.nist.gov/ixml-breadboard/ixml/ngac/index.html/) on line.
 
-next steps
-  -- validate PML parse?
-     -- find a way to unit test?
-     -- exporting JS into an SEF then batching SaxonJS calls?
-  -- process in a meaningful way?
-     PML NGAC function library?
-  -- convert into XACML?
+*Note* as of writing, this demonstration is barely capably of parsing NGAC PML (Process Machine Language), much less of doing anything with it. Let us know you wish to see progress on this front!
+
+### To serve the web demo locally
+
+For development and testing, serving the application locally is useful and easy.
+
+From a command line, start a web server from this directory or from the project directory as noted in the project [README](../../README.md). For Node.JS, with `http-server` installed:
+
+```
+$ http-server
+```
+
+With the server running, open a browser to [localhost port 8080](http://localhost:8080/index.html). It will display the landing page in the directory at the root of the web server.
+
+This will either be the NGAC demo page (for a web server started in this directory), or there will be a way to navigate to it.
+
+## Ideas for further development
+
+Given a parser that correctly interprets PML, all these should be "merely" XSLT - TBD -
+
+- syntax highlighting
+- validating
+- application logic
+- XACML interfacing (production/conversion)
+
+
+## Mapping - ANTLR to iXML
+
+`PML.g4` is an ANTLR grammar. Casting it into iXML entailed the following:
+
+- switch to periods delimiting declarations and commas within rhs
+- reworking character handling (from other models)
+- factoring out variable assignments (`=` notation)
+- reworking whitespace
+- rework `-> skip`
+
+Example
+
+```ANTLR
+createAttributeStatement:
+    CREATE (OBJECT_ATTRIBUTE | USER_ATTRIBUTE) name=expression IN parents=expression ;
+```
+
+```
+createAttributeStatement:
+    CREATE, RS, (OBJECT_ATTRIBUTE | USER_ATTRIBUTE), RS, {name=}expression, RS, IN, RS, {parents=}expression .
+```
+
+where `RS` is required whitespace.
 
 

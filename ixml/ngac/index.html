@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+  <title>NGAC PML in iXML</title>
+  <meta charset="utf-8" />
+  <style type="text/css" id="pageStyle">
+
+ .panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8em;
+  margin-top: 0.6em;
+  }
+  
+main p { max-width: 48em }
+
+.panels > * { vertical-align: text-top; outline: thin solid black; padding: 0.4em; margin: 0.25em 0em;
+  background-color: whitesmoke }
+
+.boxed.fullwidth { width: 100% }
+
+.editbox { width: 100%; box-sizing: border-box; resize: both; }
+
+.codePanel { min-width: 30vw}
+
+.floatButton { float:right; margin-left: 0.6em }
+
+#displayFrame { width: 100% }
+
+.outline .oll { background-color: lavender;  outline: thin inset grey; font-weight: bold }
+.ola .oll { background-color: honeydew }
+.outline { display: flex; flex-flow: row; font-family: "Open Sans", sans-serif }
+.outline .ola { display: flex; flex-flow: row }
+.outline div { flex-grow: 0; vertical-align: middle; padding: 0rem  }
+.outline div:first-child { margin-top: 0rem  }
+.outline div:last-child  { margin-bottom: 0rem  }
+.outline div.oll { font-size: 80%; padding: 0.2rem }
+.outline div.olt { outline: thin inset black; background-color: ivory;
+     font-size: 90%;  font-family: 'IBM Plex Mono', monospace; padding: 0.2rem; white-space: pre }
+.outline p { margin: 0em }
+.lit { font-family: 'Open Sans', sans-serif }
+
+
+</style>
+  <link rel="stylesheet" href="../../site/nist-boilerplate.css" type="text/css" />
+  <link rel="stylesheet" href="../../site/nist-combined.css"/>
+  
+  <!-- https://github.com/usnistgov/pages-root/wiki/Adding-NIST-required-branding-and-features-to-your-site -->
+  <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.1.min.js"></script> -->
+  <!-- Add back the nist-header-footer.js script to provide the NIST header and footer dynamically -->
+  <!-- <script src="https://pages.nist.gov/nist-header-footer/js/nist-header-footer.js" type="text/javascript" defer="defer"></script> -->
+  
+  <!-- Same with Google analytics    -->
+  <!-- <script async="async" type="text/javascript" id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIST%26subagency=github%26pua=UA-66610693-1%26yt=true%26exts=ppsx,pps,f90,sch,rtf,wrl,txz,m1v,xlsm,msi,xsd,f,tif,eps,mpg,xml,pl,xlt,c">
+</script>
+<script type="text/javascript" src="https://pages.nist.gov/leaveNotice/js/jquery.leaveNotice-nist.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://pages.nist.gov/leaveNotice/css/jquery.leaveNotice.css" /> 
+-->
+
+<script type="text/javascript" src="../../lib/jwiXML/saxonJS/SaxonJS2.rt.js" language="javascript"></script>
+<script type="text/javascript" src="../../lib/jwiXML/dist/jwiXML.adv.cls.js" language="javascript"></script>
+<script type="text/javascript"> <!-- goodness script --> 
+
+    const clearLoad = (loadButtonID, clearDivID) => {
+      const clearing = document.getElementById(clearDivID);
+      const emptyList = new DataTransfer();
+      const noFiles = emptyList.files;
+      if (clearing.value) { clearing.value = '' };
+      clearing.replaceChildren();
+      document.getElementById(loadButtonID).files = noFiles;
+    }
+
+    function clearDisplay() {
+      document.getElementById('displayFrame').replaceChildren();
+    }
+
+    async function iXMLtransform() {
+      const parseData = document.getElementById('pmlInputBox').value;
+      try {
+        SaxonJS.transform( {
+          'stylesheetLocation' : 'ngac-pml-display.sef.json',
+          'initialTemplate' : 'Q{}process-PML',
+          'templateParams': { 'literal': parseData } },
+          "async" );
+          document.getElementById('displayFrame').scrollIntoView();  }
+      catch (e) { alert("Failure applying XSLT 3.0"); console.log(e); }
+    }
+      
+    // provided a fileList object by a UI button, pastes its file contents into a textarea
+    // does not defend against multiple files
+    function dropFileText(fileSet, textareaID) {
+      for (const eachFile of fileSet) {
+        let theTextArea = document.getElementById(textareaID)
+        let frdr = new FileReader();
+        frdr.onload = () => theTextArea.value = frdr.result;
+        frdr.readAsText(eachFile);
+      }
+    }
+
+    // mainly cribbed from https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Fetching_data
+    // grabs  file text contents and drops it into the textarea designated
+    function pasteFileContents(HREF, textareaID) {
+      const theTextArea = document.getElementById(textareaID);
+      fetch(HREF) // returns a promise
+        .then( (response) => {
+          if (!response.ok) { throw new Error(`HTTP error: ${response.status}`); }
+          return response.text();
+        } )
+        .then( (text) => { theTextArea.value = text; } )
+        .catch( (error) => { console.log = `Could not fetch from ${HREF}: ${error}`; }
+        );
+    }
+
+
+</script>
+
+</head>
+
+<body>
+
+  <!-- the NIST header is given statically for display when the page is loaded from the file system. -->
+  <div id="nistheadergoeshere"><header class="nist-header" id="nist-header" role="banner">
+
+    <a href="https://www.nist.gov/" title="National Institute of Standards and Technology" class="nist-header__logo-link" rel="home">
+      <svg aria-hidden="true" class="nist-header__logo-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32">
+        <path d="M20.911 5.375l-9.482 9.482 9.482 9.482c0.446 0.446 0.446 1.161 0 1.607l-2.964 2.964c-0.446 0.446-1.161 0.446-1.607 0l-13.25-13.25c-0.446-0.446-0.446-1.161 0-1.607l13.25-13.25c0.446-0.446 1.161-0.446 1.607 0l2.964 2.964c0.446 0.446 0.446 1.161 0 1.607z"></path>
+      </svg>
+      <svg class="nist-header__logo-image" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-237 385.7 109.7 29.3">
+        <title>National Institute of Standards and Technology</title>
+        <g>
+          <path class="st0" d="M-231,415h-6v-23.1c0,0,0-4.4,4.4-5.8c4-1.3,6.6,1.3,6.6,1.3l19.7,21.3c1,0.6,1.4,0,1.4-0.6v-22h6.1V409
+            c0,1.9-1.6,4.4-4,5.3c-2.4,0.9-4.9,0.9-7.9-1.7l-18.5-20c-0.5-0.5-1.8-0.6-1.8,0.4L-231,415L-231,415z"></path>
+          <path class="st0" d="M-195,386.1h6.1v20.7c0,2.2,1.9,2.2,3.6,2.2h26.8c1.1,0,2.4-1.3,2.4-2.7c0-1.4-1.3-2.8-2.5-2.8H-176
+            c-3,0.1-9.2-2.7-9.2-8.5c0-7.1,5.9-8.8,8.6-9h49.4v6.1h-12.3V415h-6v-22.9h-30.2c-2.9-0.2-4.9,4.7-0.2,5.4h18.6
+            c2.8,0,7.4,2.4,7.5,8.4c0,6.1-3.6,9-7.5,9H-185c-4.5,0-6.2-1.1-7.8-2.5c-1.5-1.5-1.7-2.3-2.2-5.3L-195,386.1
+            C-194.9,386.1-195,386.1-195,386.1z"></path>
+        </g>
+      </svg>
+    </a>
+  
+  </header>
+  </div>
+
+  <div style="display: none" class="teaser">Testing <a class="external" href="https://invisiblexml.org">Invisible XML</a> (iXML) grammars and parsing</div>
+  <!-- <details id="sec-notice">
+    <summary>Is <a href="..">this site</a> a preview, mockup or spoof? - <i><b>How you can know</b></i></summary>
+    <p><span>The real site domain ends in <code>nist.gov</code></span>&#xA0;<span>The page address shows <code>https://</code></span></p>
+  </details> -->
+  <main class="draft" style="background-color: aliceblue">
+    <h1>NGAC PML Parser - <small>iXML Breadboard</small></h1>
+    <ul>
+      <li>Reference <a href="https://github.com/PM-Master/policy-machine-core/blob/master/src/main/java/gov/nist/csd/pm/policy/pml/antlr/PML.g4">PML ANTLR</a> grammar in <a href="https://github.com/PM-Master/policy-machine-core" class="external">PML Reference Implementation</a> repository</li>
+      <li><a href="https://github.com/usnistgov/ixml-breadboard/blob/main/ixml/ngac/ngac-pml.ixml">iXML emulation</a> of this grammar used here (in Github)</li>
+    <li>Back to <b><a href="../../index.html">iXML Breadboard</a></b> landing page</li>
+  </ul>
+  <p>PML is <b>Policy Machine Language</b>, a declarative syntax for defining an access configuration defined by <b>Next Generation Acess Control</b> (NGAC). This experimental application does what it can with PML but comes without warranty of fitness for any purpose.</p>
+    <p>For more on NGAC and the Policy Machine, start with <a href="https://csrc.nist.gov/Projects/Policy-Machine">the NIST/ITL landing page</a>, and see the <a href="https://github.com/PM-Master/policy-machine-core" class="external">PML Reference Implementation</a> repository.</p>
+    <p>See the <a href="../../index.html">site index</a> for more on iXML (<a class="external" href="https://invisiblexml.org">Invisible XML</a>).</p>
+    
+    <div class="fullwidth">
+      <button class="clearButton floatButton" onclick="clearDisplay();">Clear Display</button>
+      
+      <p style="margin-top:0em">Enter PML below. <button class="applyButton" onclick="iXMLtransform()">Display</button> to process; or edit and change focus (with tab or pointer).</p>
+    
+    <details class="codePanel" open="open">
+      <summary>PML <input type="file" id="loadParseDataButton" name="loadParseDataButton" title="Load your data" onchange="dropFileText(this.files,'pmlInputBox');this.parentElement.parentElement.open = true;"
+      />
+      <button class="floatButton" onclick="pasteFileContents('PM-exampleA-ngac.txt','pmlInputBox');">Load an example</button>
+        
+        <button class="floatButton" onclick="clearLoad('loadParseDataButton','pmlInputBox');">Clear</button></summary>
+      <textarea style="margin:0.6em 0em" id="pmlInputBox" class="editbox" spellcheck="false" rows="24" value='create user "User"' onchange="iXMLtransform()"> </textarea>
+      
+    </details>
+  </div>
+    <div id="displayFrame"> </div>
+
+</div>
+  </main>
+  <div class="project-footer">
+    <p><i>iXML Breadboard</i> is an experimental application for testing and assessment. Disclaimers apply; no warranty should or can be assumed.</p>
+  </div>
+  <!-- <script src="site/nist-bounce.js" depends on JQuery > </script>  -->
+  
+  <!-- The footer can be provided dynamically by script; see above -->
+  <div id="nistfootergoeshere"><footer class="nist-footer">
+    <div class="nist-footer__inner">
+      <div class="nist-footer__menu" role="navigation">
+        <ul>
+          <li class="nist-footer__menu-item">
+            <a href="https://www.nist.gov/privacy-policy">Site Privacy</a>
+          </li>
+          <li class="nist-footer__menu-item">
+            <a href="https://www.nist.gov/oism/accessibility">Accessibility</a>
+          </li>
+          <li class="nist-footer__menu-item">
+            <a href="https://www.nist.gov/privacy">Privacy Program</a>
+          </li>
+          <li class="nist-footer__menu-item">
+            <a href="https://www.nist.gov/oism/copyrights">Copyrights</a>
+          </li>
+          <li class="nist-footer__menu-item">
+            <a href="https://www.commerce.gov/vulnerability-disclosure-policy">Vulnerability Disclosure</a>
+          </li>
+          <li class="nist-footer__menu-item">
+            <a href="https://www.nist.gov/no-fear-act-policy">No Fear Act Policy</a>
+          </li>
+          <li class="nist-footer__menu-item">
+            <a href="https://www.nist.gov/foia">FOIA</a>
+          </li>
+          <li class="nist-footer__menu-item">
+            <a href="https://www.nist.gov/environmental-policy-statement">Environmental Policy</a>
+          </li>
+          <li class="nist-footer__menu-item ">
+            <a href="https://www.nist.gov/summary-report-scientific-integrity">Scientific Integrity</a>
+          </li>
+          <li class="nist-footer__menu-item ">
+            <a href="https://www.nist.gov/nist-information-quality-standards">Information Quality Standards</a>
+          </li>
+          <li class="nist-footer__menu-item">
+            <a href="https://www.commerce.gov/">Commerce.gov</a>
+          </li>
+          <li class="nist-footer__menu-item">
+            <a href="https://www.science.gov/">Science.gov</a>
+          </li>
+          <li class="nist-footer__menu-item">
+            <a href="https://www.usa.gov/">USA.gov</a>
+          </li>
+          <li class="nist-footer__menu-item">
+            <a href="https://vote.gov/">Vote.gov</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="nist-footer__logo">
+      <a href="https://www.nist.gov/" title="National Institute of Standards and Technology" class="nist-footer__logo-link" rel="home">
+        <img src="https://pages.nist.gov/nist-header-footer/images/nist_logo_brand_white.svg" alt="National Institute of Standards and Technology logo">
+      </a>
+    </div>
+  </footer>
+  </div>
+
+
+  </body>
+</html>

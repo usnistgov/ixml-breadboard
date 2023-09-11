@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>jωiXML processor - sample application</title>
+        <script type="text/javascript" src="../saxonJS/SaxonJS2.rt.js" language="javascript"></script>
+        <script type="text/javascript" src="../dist/jwiXML.adv.cls.js" language="javascript"></script>
+        
+    </head>
+    <body onload="SaxonJS.transform({
+        'stylesheetLocation' : 'jwiXML.sample.sef.json',
+        'initialTemplate' : 'Q{}go'
+        })">
+        <h1>jωiXML processor - sample application</h1>
+        <div id="sandpit"></div>
+    </body>
+</html>
