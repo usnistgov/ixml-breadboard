@@ -71,7 +71,7 @@ The scripts require [`bash`](https://www.gnu.org/software/bash/) to run invocati
 
 Many thanks to the developers of all layers in this impressive commodity stack!
 
-- [XML Calabash](https://xmlcalabash.com/) and [NineML]() - Norm Tovey-Walsh
+- [XML Calabash](https://xmlcalabash.com/) and [NineML](https://nineml.org) - Norm Tovey-Walsh
 - [Saxon](https://saxonica.com/welcome/welcome.xml) - Mike Kay and associates
 - [XML](https://www.w3.org/XML/) and [XSLT](https://www.w3.org/Style/XSL/)
 - Java, open-source operating systems, network protocols ...
