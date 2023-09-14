@@ -45,14 +45,12 @@ For guidance on available scripts, see the [`src` directory readme file](src/rea
 
 ### Applications in the browser
 
-Wherever an HTML file appears, typically an application can be served from a plain vanilla web server. As shown by [index.html](index.html), this includes the top-level directory. Start a server from this directory to see a navigation and demonstration page.
-
-For example, in file `index.html` this directory provides a testing application for an iXML parse using your own grammar, or a grammar provided. To run it:
+Wherever an HTML file appears, typically an application can be served from a plain vanilla web server. As shown by [index.html](index.html), this includes the top-level directory, which includes a top-level "portal" page with a testing application for an iXML parse, using your own grammar or a grammar provided. To run it:
 
 - From a command prompt open in the current directory, start a web server (Apache, Node.js `http-server` or your preference)
-- Using a current browser, open `http://localhost:8080/index.html`
+- Using a current browser, open the page at `http://localhost:8080/index.html` (with appropriate adjustment for your configuration)
 
-From the top-level directory, a web server can also serve any file in the project, subject to its configuration, while  different experiments may offer different entry points.
+From the top-level directory, a web server can also serve any file in the project, while different experiments may offer different entry points.
 
 ## Dependencies
 
