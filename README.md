@@ -39,31 +39,25 @@ https://github.com/invisibleXML/ixml/tree/master/samples also gives some example
 
 ### Scripted routines supporting batch (standalone) processing
 
-(*Planned*)
+Among useful iXML applications are builds under CI/CD and publication pipelines, both initiated using scripts.
 
 For guidance on available scripts, see the [`src` directory readme file](src/readme.md).
 
-### Applications in the browser (forthcoming)
+### Applications in the browser
 
-*(Planned. This is how easy it will be.)*
-
-Wherever an HTML file appears, typically an application can be served from a plain vanilla web server.
+Wherever an HTML file appears, typically an application can be served from a plain vanilla web server. As shown by [index.html](index.html), this includes the top-level directory. Start a server from this directory to see a navigation and demonstration page.
 
 For example, in file `index.html` this directory provides a "workbench" application for testing an iXML parse. To run it:
 
-- Start a web server (Apache, Node.js http-server or your preference) from this directory (i.e. using it as root), e.g.
-  - open a command prompt
-  - start `http-server`
+- From a command prompt open in the current directory, start a web server (Apache, Node.js `http-server`` or your preference)
 - Using a current browser, open `http://localhost:8080/index.html`
 - Examine and test the application
 
-When started at the root of the project, a web server can also serve any file in the project, subject to its configuration, and different experiments may offer different entry points.
+From the top-level directory, a web server can also serve any file in the project, subject to its configuration, while  different experiments may offer different entry points.
 
 ## Dependencies
 
 ### Browser applications
-
-*(Planned)*
 
 The browser applications generally rely on two libraries for Invisible XML and XSLT 3.0 respectively:
 
@@ -74,11 +68,9 @@ These are used and deployed in accordance with [their licenses](THIRD_PARTY_LICE
 
 ### Scripts
 
-*(Planned)*
+These scripts and libraries rely on `bash`, Maven, Java (a JDK is required for Maven), XML Calabash, Saxon, and components as documented for iXML. These are all open source (while components may be experimental / in development).
 
-These scripts and libraries rely on `bash`, Maven, XML Calabash, Saxon, and components for Calabash as documented for iXML. These are all open source (while components may be experimental / in development).
-
-Install [Maven](https://maven.apache.org) to manage software dependencies; check for or install [`bash`](https://www.gnu.org/software/bash/) to run invocation scripts.
+The scripts require [`bash`](https://www.gnu.org/software/bash/) to run invocation scripts, generally Java and sometimes [Maven](https://maven.apache.org). Additional dependencies per project may be managed via Maven or by a local configuration.
 
 Many thanks to the developers of all layers in this impressive commodity stack!
 
@@ -88,24 +80,6 @@ Many thanks to the developers of all layers in this impressive commodity stack!
 - Java, open-source operating systems, network protocols ...
 
 ## Project planning
-
-Planned:
-
-- Landing page with links to online tools and guidance (this page)
-- Working grammars 
-- in-browser iXML Breadboard based on jwiXML
-  - application-specific SaxonJS processors 
-- CL support via XML Calabash and CoffeePot coffee.nineml.org
-  - end to end
-  - iXML parsing as in-Saxon function call (sacks.nineml.org)
-  - 'grammar compiler' producing a portable XSLT module for any grammar?
-- XSpec testing harness for parsers
-- Resource kit for experimenting
-  - may be PoCs for other projects
-  - NGAC
-  - XPath 3.0
-  - Metapath (port from ANTLR)
-  - LMNL syntax? (in my branch :-)
 
 Goals:
 
@@ -120,14 +94,13 @@ Goals:
   - Metapath
   - NGAC?
 
-
 ## Contact information
 
 Principal Investigator: Wendell Piez, NIST (US National Institute of Standards and Technology) ITL/CSD (Information Technology Laboratory, Computer Security Division).
 
 Email w e n d e l l (dot) p i e z (at) n i s t (dot) g o v.
 
-## README (retained from template)
+## page requirements - README (retained from template)
 
 Each repository will contain a plain-text [README file][wk-rdm],
 preferably formatted using [GitHub-flavored Markdown][gh-mdn] and
