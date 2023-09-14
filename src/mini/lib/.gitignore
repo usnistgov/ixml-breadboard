@@ -1,0 +1,5 @@
+
+# Ignoring all jars
+*.jar
+# except
+!slf4j-simple-1.7.30.jar

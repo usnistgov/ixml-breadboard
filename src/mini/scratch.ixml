@@ -1,0 +1,16 @@
+{ Local copy of ../../ixml/punct-text.ixml }
+
+sentence: ws, (punct|text)++RS, ws .
+
+text: punct?, chars, (punct, chars)*, punct? .
+
+punct: [P]+ .
+
+chars: wordchar+ .
+
+ws: [Zs|#9|#a|#d]* .
+
+RS: [Zs|#9|#a|#d]+ .
+
+-wordchar: ~[Zs|#9|#a|#d|P] .
+
