@@ -26,7 +26,7 @@ main p { max-width: 48em }
 
 .floatButton { float:right; margin-left: 0.6em }
 
-#displayFrame { width: 100% }
+#displayFrame { width: 100%; overflow:auto; outline: thin solid black }
 
 .outline .oll { background-color: lavender;  outline: thin inset grey; font-weight: bold }
 .ola .oll { background-color: honeydew }
@@ -162,6 +162,7 @@ main p { max-width: 48em }
       <button class="clearButton floatButton" onclick="clearDisplay();">Clear Display</button>
       
       <p style="margin-top:0em">Enter PML below. <button class="applyButton" onclick="iXMLtransform()">Display</button> to process; or edit and change focus (with tab or pointer).</p>
+    </div>
     
     <details class="codePanel" open="open">
       <summary>PML <input type="file" id="loadParseDataButton" name="loadParseDataButton" title="Load your data" onchange="dropFileText(this.files,'pmlInputBox');this.parentElement.parentElement.open = true;"
@@ -169,7 +170,7 @@ main p { max-width: 48em }
       <button class="floatButton" onclick="pasteFileContents('PM-exampleA-ngac.txt','pmlInputBox');">Load an example</button>
         
         <button class="floatButton" onclick="clearLoad('loadParseDataButton','pmlInputBox');">Clear</button></summary>
-      <textarea style="margin:0.6em 0em" id="pmlInputBox" class="editbox" spellcheck="false" rows="24" value='create user "User"' onchange="iXMLtransform()"> </textarea>
+      <textarea style="margin:0.6em 0em" id="pmlInputBox" class="editbox" spellcheck="false" rows="5" value='create user "User"' onchange="iXMLtransform()"> </textarea>
       
     </details>
   </div>

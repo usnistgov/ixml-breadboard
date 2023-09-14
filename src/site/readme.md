@@ -25,5 +25,5 @@ npm xslt3
 ## scrape
 
 ```
-xslt3 -xsl:ixml-showcase.xsl -export:ixml-showcase.sef.json -nogo -ns:##html5
+xslt3 -xsl:ixml-showcase.xsl -export:../../sef/site/ixml-showcase.sef.json -nogo -ns:##html5
 ```

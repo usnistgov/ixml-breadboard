@@ -169,7 +169,7 @@ main p { max-width: 48em }
     </ul>
     <p><a class="external" href="https://invisiblexml.org">iXML is Invisible XML</a>, a data processing technology. It is aptly named to the extent that you never see XML when using it.</p>
     <p>With Invisible XML, XML processing stacks and pipelines can support any other (non-XML) format, syntax or language, requiring only that be well defined (by means of a grammar). Given such a definition, anything (that is, any kind of text that is well structured and well described) can be turned into XML, manipulated, then turned again into anything else at all.</p>
-    <p>This page provides a local testing environment for such grammars, relying on John Lumley's <a class="external" href="https://github.com/johnlumley/jwiXML">jωiXML processor</a>, as supported by <a class="external" href="">SaxonJS</a> library. The software (scripts and stylesheets) are delivered to your browser, where all processing is accomplished with no data transfer. Its function emulates <a class="external" href="https://johnlumley.github.io/jwiXML.xhtml">the jωiXML workbench</a>, somewhat streamlined for this project.</p>
+    <p>This page provides a local testing environment for such grammars, relying on John Lumley's <a class="external" href="https://github.com/johnlumley/jwiXML">jωiXML processor</a>, as supported by the <a class="external" href="">SaxonJS</a> library. The software (scripts and stylesheets) are delivered to your browser, where all processing is accomplished with no data transfer. Its function emulates <a class="external" href="https://johnlumley.github.io/jwiXML.xhtml">the jωiXML workbench</a>, streamlined for this project.</p>
       <details class="boxed"><summary>About iXML Breadboard</summary>
       <p>This platform is produced as a host for software applications under development using emerging and standard technologies. These are generally proof-of-concept, demonstration or mockup applications intended primarily to provide templates or patterns for further development of applications elsewhere.</p>
       <p>To this extent the success of this initiative will not be reflected in how active it is, but in how widely its patterns are disseminated; if you use this resources, please do provide credits to upstream developers in any publication, and help to connect the loop by providing via email or on the Issues board.</p>
@@ -187,8 +187,10 @@ main p { max-width: 48em }
       <select name="grammar-select" id="grammar-select" onchange="pasteFileContents(this.value,'iXMLeditbox')">
         <option value="ixml/tiny.ixml">Microdemo</option>
         <option value="ixml/punct-text.ixml">Punctuation</option>
+        <option value="ixml/xpath/xpath-full.ixml">XPath - complete</option>
+        <option value="ixml/xpath/xpath-compact.ixml">XPath - compact</option>
         <option value="ixml/ngac/ngac-pml.ixml">NGAC PML</option>
-        <option value="ixml/jadn/jas-poc4.ixml">JADN JDL</option>
+        <!-- <option value="ixml/jadn/jas-poc4.ixml">JADN JDL</option> -->
       </select>
         <!-- button class="floatButton" onclick="pasteFileContents('ixml/tiny.ixml','iXMLeditbox');">Load demo grammar</-button -->
         <button id="clear-button" class="floatButton" onclick="clearLoad('loadiXMLButton','iXMLeditbox');">Clear</button>
