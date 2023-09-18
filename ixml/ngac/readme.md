@@ -12,9 +12,9 @@ In this directory:
 
 ## To try the web demo
 
-See an [iXML PML demonstration](https://pages.nist.gov/ixml-breadboard/ixml/ngac/index.html/) on line.
+A web demo can be served locally as if it were [on a public site](https://pages.nist.gov/ixml-breadboard/ixml/ngac/index.html), which it is not (at time of writing).
 
-*Note* as of writing, this demonstration is barely capably of parsing NGAC PML (Process Machine Language), much less of doing anything with it. Let us know you wish to see progress on this front!
+The bare application does nothing with PML beyond parse it and display the parse tree. It is stable until we can define and prioritize next steps - let us know!
 
 ### To serve the web demo locally
 
@@ -28,7 +28,7 @@ $ http-server
 
 With the server running, open a browser to [localhost port 8080](http://localhost:8080/index.html). It will display the landing page in the directory at the root of the web server.
 
-This will either be the NGAC demo page (for a web server started in this directory), or there will be a way to navigate to it.
+This will either be the NGAC demo page (for a web server started in this directory), or (from anothe page) there will be a way to navigate to it.
 
 ## Ideas for further development
 
