@@ -11,12 +11,13 @@
 
   <xsl:output method="xml" encoding="utf-8" indent="yes" omit-xml-declaration="yes"/>
 
-  <xsl:mode on-no-match="shallow-copy"/>
+  <!--<xsl:mode on-no-match="shallow-copy"/>-->
 
   <xsl:param name="grammarPath" as="xs:string">../../ixml/tiny.ixml</xsl:param>
 
-  <xsl:template name="xsl:initial-template">
-    <xsl:variable name="parser" select="cs:load-grammar($grammarPath)"/>
+  <xsl:variable name="parser" select="cs:load-grammar($grammarPath)"/>
+   
+  <xsl:template name="xsl:initial-template" match="/">
     <doc>
       <xsl:sequence select="$parser('15 February 2022')"/>
     </doc>
