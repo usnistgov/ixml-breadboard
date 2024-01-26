@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+ROOT_DIR="$SCRIPT_DIR/.."
+SRC_DIR="$ROOT_DIR/src"
+
+function msg() {
+    echo "$@" >&2
+}
+
+usage() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [ARGS] SUBCOMMAND [SUBCOMMAND ARGS]
+
+Subcommands:
+EOF
+}
+
+# Parse top level arguments
+while getopts 'b:h' opt; do
+    case "$opt" in
+        h)
+            usage
+            exit 0
+            ;;
+        ?)
+            msg "Unknown option: $opt"
+            usage >&2
+            exit 1
+            ;;
+    esac
+done
+shift "$((OPTIND -1))"
+
+# Direct subcommand
+[[ -z "${1-}" ]] && { echo "Error: SUBCOMMAND not specified"; usage >&2; exit 1; }
+
+SUBCOMMAND=$1
+shift 1
+
+# used by subcommands to display their invocation
+BASE_COMMAND="$(basename "${BASH_SOURCE[0]}") $SUBCOMMAND"
+export BASE_COMMAND
+
+case "$SUBCOMMAND" in
+    ?)
+        msg "Unknown subcommand: $SUBCOMMAND"
+        exit 1
+        ;;
+esac
