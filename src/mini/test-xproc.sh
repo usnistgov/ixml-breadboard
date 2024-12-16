@@ -17,5 +17,7 @@ fi
 # -init org.nineml.coffeesacks.RegisterCoffeeSacks
 # -Dcom.xmlcalabash.xproc-configurer=org.nineml.coffeesacks.RegisterCoffeeSacks
 
-java -cp $CLASSPATH com.xmlcalabash.drivers.Main ixml-basic.xpl
+java -cp $CLASSPATH com.xmlcalabash.drivers.Main --saxon-configuration saxon-ixml-config.xml invisible-saxon.xpl
+
+# java -cp $CLASSPATH com.xmlcalabash.drivers.Main --saxon-configuration ixml-basic.xpl
  

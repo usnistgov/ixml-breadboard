@@ -4,6 +4,14 @@ Now in XProc 1.0 for XML Calabash
 
 Soon for XProc 3.0 for Morgana and others?
 
+## punchlist
+
+Execution script for mini demo using Saxon under Maven
+
+iXML in XSpec support? under Maven would be ideal
+  XProc configuration requires Saxon/iXML setup
+  
+
 ## NineML library resources
 
 This demo builds on [NineML](https://nineml.org/), a software suite supporting [Invisible XML](https://invisiblexml.org) functionality in Java by Norm Tovey-Walsh, licensed as open source. Mr Tovey-Walsh bears no responsibility for any of the applications on this site or for iXML Breadboard. When building your own software refer to the sources:

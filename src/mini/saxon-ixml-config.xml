@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns="http://saxon.sf.net/ns/configuration"
+   edition="HE" label="Saxon-HE CoffeeSacks iXML configuration">
+   <!-- Providing bindings for iXML extension functions -->
+   <resources>
+      <!--<extensionFunction>org.nineml.coffeesacks$LoadGrammar</extensionFunction>-->
+      <!--<extensionFunction>org.nineml.coffeesacks.LoadGrammar</extensionFunction>
+      <extensionFunction>org.nineml.coffeesacks.MakeParser</extensionFunction>
+      <extensionFunction>org.nineml.coffeesacks.HygieneReportFunction</extensionFunction>-->
+      <extensionFunction>org.nineml.coffeesacks.RegisterCoffeeSacks</extensionFunction>
+   </resources>
+</configuration>
